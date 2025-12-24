@@ -1,0 +1,8 @@
+{
+  "name": "Hotelier PMS",
+  "description": "Multi-tenant cloud-based Hotel Management System with Superadmin onboarding and advanced analytics.",
+  "requestFramePermissions": [
+    "geolocation",
+    "microphone"
+  ]
+}
