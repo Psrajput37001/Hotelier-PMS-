@@ -18,7 +18,8 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0;
             -webkit-tap-highlight-color: transparent;
-            overflow: hidden;
+            /* Changed to allow scrolling when content overflows */
+            overflow-x: hidden;
             transition: background-color var(--transition-speed) ease;
         }
 
@@ -45,7 +46,23 @@
         /* Optimize for mobile GPU */
         * {
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            -moz-osx-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom scrollbar for brand aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(245, 158, 11, 0.4);
         }
 
         @media (max-width: 768px) {
