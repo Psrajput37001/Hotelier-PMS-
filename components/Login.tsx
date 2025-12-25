@@ -14,6 +14,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, theme = 'dark', toggleTheme }) =
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const isDark = theme === 'dark';
 
@@ -21,68 +22,73 @@ const Login: React.FC<LoginProps> = ({ onLogin, theme = 'dark', toggleTheme }) =
     e.preventDefault();
     setError('');
 
-    // Superadmin Credentials
     if (clientId.toUpperCase() === 'SUPERADMIN' && username.toUpperCase() === 'SUPERADMIN' && password === 'Reset@852') {
        onLogin({ role: 'SUPERADMIN', username: 'SUPERADMIN', clientId: 'SUPERADMIN' });
        return;
     }
 
-    // Hotel login logic (Mock)
     if (clientId && username && password) {
        onLogin({ role: 'HOTEL_ADMIN', username, clientId });
        return;
     }
 
-    setError('Authentication Failed. Please check your credentials.');
+    setError('Access Denied. Check credentials.');
   };
 
   return (
     <div className={`min-h-screen flex flex-col lg:flex-row font-sans overflow-hidden transition-colors duration-700 ${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'}`}>
       
-      {/* Absolute Header - Controls only, removed duplicate logo */}
-      <div className="absolute top-0 right-0 p-8 flex justify-end items-center z-50">
+      {/* Mobile-First Floating Theme Toggle */}
+      <div className="fixed top-5 right-5 z-[100] lg:top-8 lg:right-8">
         <button 
           onClick={toggleTheme}
-          className={`flex items-center justify-center p-3 rounded-full transition-all duration-300 shadow-xl border ${
+          className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 shadow-2xl border ${
             isDark 
-            ? 'bg-slate-900 border-white/10 text-amber-500 hover:bg-slate-800' 
-            : 'bg-white border-slate-200 text-amber-600 hover:bg-slate-50'
+            ? 'bg-slate-900 border-white/10 text-amber-500' 
+            : 'bg-white border-slate-200 text-amber-600'
           }`}
           aria-label="Toggle Night Mode"
         >
           {isDark ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="18.36" x2="5.64" y2="16.92"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="18.36" x2="5.64" y2="16.92"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           )}
         </button>
       </div>
 
-      {/* Left Column: Form Section */}
-      <div className={`flex-1 flex flex-col justify-center items-center p-6 sm:p-12 lg:p-24 z-10 overflow-y-auto transition-colors duration-700 ${isDark ? 'bg-[#020617]' : 'bg-white'}`}>
-        <div className="w-full max-w-[460px] py-12 lg:py-0">
-          <div className="mb-14 text-center lg:text-left animate-fadeIn">
-            {/* The single, balanced-size logo */}
-            <Logo size="lg" className="inline-block" />
+      {/* Main Login Area */}
+      <div className={`flex-1 flex flex-col justify-center items-center p-6 sm:p-12 lg:p-24 z-10 transition-all duration-500 ${isDark ? 'bg-[#020617]' : 'bg-white'}`}>
+        <div className={`w-full max-w-[460px] transition-all duration-500 ${isFocused ? 'lg:translate-y-0 -translate-y-16' : ''}`}>
+          
+          <div className="mb-14 text-center lg:text-left">
+            {/* Optimized Rectangular Logo */}
+            <Logo 
+              size="lg" 
+              className={`inline-block mb-10 transition-all duration-500 ${isFocused ? 'scale-[0.7] -translate-y-4' : ''}`} 
+              shrunk={isFocused && window.innerWidth < 1024}
+            />
             
-            <div className="mt-12">
-              <h1 className={`text-5xl font-[1000] tracking-tighter mb-4 leading-none ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Gateway Access<span className="text-amber-500">.</span>
+            <div className={`transition-all duration-500 ${isFocused && window.innerWidth < 1024 ? 'opacity-0 h-0 scale-95' : 'opacity-100 h-auto'}`}>
+              <h1 className={`text-4xl lg:text-5xl font-[1000] tracking-tighter mb-4 leading-none ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                Operational Terminal<span className="text-amber-500">.</span>
               </h1>
-              <p className={`text-lg font-medium opacity-60 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Authenticated terminal for Adveda hospitality nodes.
+              <p className={`text-base font-medium opacity-60 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                Identify your Adveda node to sync services.
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-8 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-            <div className="grid grid-cols-1 gap-8">
-              <div className="group space-y-2.5">
-                <label className={`text-[11px] font-black uppercase tracking-[0.5em] ml-1 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-500' : 'text-slate-600 group-focus-within:text-indigo-600'}`}>Tenant Key</label>
+          <form onSubmit={handleLogin} className={`space-y-6 lg:space-y-10 animate-fadeIn ${isFocused ? 'mt-4' : ''}`}>
+            <div className="grid grid-cols-1 gap-6 lg:gap-10">
+              <div className="group space-y-2">
+                <label className={`text-[10px] font-black uppercase tracking-[0.5em] ml-1 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-500' : 'text-slate-600 group-focus-within:text-indigo-600'}`}>Tenant Scope</label>
                 <input 
                   type="text" 
-                  placeholder="AD-782-PMS"
-                  className={`w-full border-b-2 bg-transparent py-4 px-1 transition-all outline-none font-bold text-xl ${
+                  placeholder="EX: AD-99-PMS"
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  className={`w-full border-b-2 bg-transparent py-3 px-1 transition-all outline-none font-bold text-xl ${
                     isDark 
                     ? 'border-white/10 text-white focus:border-amber-500 placeholder:text-slate-800' 
                     : 'border-slate-200 text-slate-900 focus:border-amber-600 placeholder:text-slate-300'
@@ -93,12 +99,14 @@ const Login: React.FC<LoginProps> = ({ onLogin, theme = 'dark', toggleTheme }) =
                 />
               </div>
 
-              <div className="group space-y-2.5">
-                <label className={`text-[11px] font-black uppercase tracking-[0.5em] ml-1 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-500' : 'text-slate-600 group-focus-within:text-indigo-600'}`}>Staff Identity</label>
+              <div className="group space-y-2">
+                <label className={`text-[10px] font-black uppercase tracking-[0.5em] ml-1 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-500' : 'text-slate-600 group-focus-within:text-indigo-600'}`}>Staff Identity</label>
                 <input 
                   type="text" 
                   placeholder="Operator Handle"
-                  className={`w-full border-b-2 bg-transparent py-4 px-1 transition-all outline-none font-bold text-xl ${
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  className={`w-full border-b-2 bg-transparent py-3 px-1 transition-all outline-none font-bold text-xl ${
                     isDark 
                     ? 'border-white/10 text-white focus:border-amber-500 placeholder:text-slate-800' 
                     : 'border-slate-200 text-slate-900 focus:border-amber-600 placeholder:text-slate-300'
@@ -109,15 +117,17 @@ const Login: React.FC<LoginProps> = ({ onLogin, theme = 'dark', toggleTheme }) =
                 />
               </div>
 
-              <div className="group space-y-2.5">
+              <div className="group space-y-2">
                 <div className="flex justify-between items-center ml-1">
-                  <label className={`text-[11px] font-black uppercase tracking-[0.5em] transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-500' : 'text-slate-600 group-focus-within:text-indigo-600'}`}>Security Key</label>
-                  <button type="button" className="text-[10px] font-black uppercase tracking-widest text-amber-500 hover:text-amber-400 transition-colors">Reset</button>
+                  <label className={`text-[10px] font-black uppercase tracking-[0.5em] transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-amber-500' : 'text-slate-600 group-focus-within:text-indigo-600'}`}>Access Key</label>
+                  <button type="button" className="text-[9px] font-black uppercase tracking-widest text-amber-500">Emergency Reset</button>
                 </div>
                 <input 
                   type="password" 
                   placeholder="••••••••"
-                  className={`w-full border-b-2 bg-transparent py-4 px-1 transition-all outline-none font-bold text-xl ${
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  className={`w-full border-b-2 bg-transparent py-3 px-1 transition-all outline-none font-bold text-xl ${
                     isDark 
                     ? 'border-white/10 text-white focus:border-amber-500' 
                     : 'border-slate-200 text-slate-900 focus:border-amber-600'
@@ -130,72 +140,54 @@ const Login: React.FC<LoginProps> = ({ onLogin, theme = 'dark', toggleTheme }) =
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-red-500 text-center text-[10px] font-black uppercase tracking-[0.2em] animate-shake">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-red-500 text-center text-[11px] font-black uppercase tracking-widest animate-shake">
                 {error}
               </div>
             )}
 
             <button 
               type="submit"
-              className={`w-full py-6 rounded-full font-black text-xs uppercase tracking-[0.5em] transition-all active:scale-[0.98] shadow-[0_20px_40px_-10px_rgba(245,158,11,0.3)] mt-6 ${
+              className={`w-full py-6 rounded-full font-black text-xs uppercase tracking-[0.5em] transition-all active:scale-[0.98] shadow-2xl ${
                 isDark 
-                ? 'bg-amber-500 hover:bg-amber-400 text-black' 
+                ? 'bg-amber-500 hover:bg-amber-400 text-black shadow-amber-500/20' 
                 : 'bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/20'
               }`}
             >
-              Start Operation
+              Initialize Node
             </button>
           </form>
 
-          <div className="mt-20 pt-10 border-t border-slate-500/10 flex flex-col items-center lg:items-start opacity-30">
-            <p className="text-[9px] text-slate-500 font-black uppercase tracking-[0.5em] mb-2">
-              Proprietary Adveda Architecture
-            </p>
-            <p className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">
-              &copy; {new Date().getFullYear()} Adveda Solutions. Ahmedabad Global Center.
+          <div className={`mt-14 lg:mt-20 transition-all duration-500 ${isFocused && window.innerWidth < 1024 ? 'opacity-0 translate-y-4' : 'opacity-30'}`}>
+            <p className="text-[9px] text-center lg:text-left text-slate-500 font-black uppercase tracking-[0.6em]">
+              &copy; {new Date().getFullYear()} Adveda Solutions Group • Ahmedabad Hub
             </p>
           </div>
         </div>
       </div>
 
-      {/* Right Column: Visual Showcase Section */}
-      <div className={`hidden lg:flex lg:w-[40%] xl:w-[45%] relative p-16 justify-center items-center overflow-hidden transition-colors duration-700 ${isDark ? 'bg-slate-900' : 'bg-[#1a1a2e]'}`}>
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-             <defs>
-               <pattern id="dot-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                 <circle cx="2" cy="2" r="1" fill="white" />
-               </pattern>
-             </defs>
-             <rect width="100%" height="100%" fill="url(#dot-grid)" />
-           </svg>
-        </div>
+      {/* Showcase Column - Desktop Only */}
+      <div className={`hidden lg:flex lg:w-[40%] xl:w-[45%] relative p-16 justify-center items-center overflow-hidden transition-colors duration-700 ${isDark ? 'bg-slate-950' : 'bg-[#1a1a2e]'}`}>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
         
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-amber-500/10 rounded-full blur-[180px] -translate-y-1/2 translate-x-1/2 animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[140px] translate-y-1/2 -translate-x-1/2 animate-pulse [animation-delay:2s]"></div>
-        
-        <div className="relative z-10 w-full max-w-[500px] text-left">
-          <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[4rem] p-20 shadow-2xl space-y-16 animate-fadeIn">
-            <div className="w-16 h-1 bg-amber-500/50 rounded-full"></div>
-            
-            <div className="space-y-10">
-              <h2 className="text-6xl font-[1000] text-white tracking-tighter leading-[0.85] uppercase italic">
-                A Unified <br/>Hospitality <br/><span className="text-amber-500">Universe.</span>
-              </h2>
-              <p className="text-slate-400 text-lg font-medium leading-relaxed opacity-60 max-w-sm">
-                Advanced PMS infrastructure designed for world-class hotels. Real-time intelligence at your fingertips.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-12 border-t border-white/5 pt-10">
+        <div className="relative z-10 w-full max-w-[480px]">
+          <div className="bg-white/5 border border-white/10 rounded-[4rem] p-16 shadow-2xl space-y-12 animate-fadeIn">
+            <div className="h-1 w-12 bg-amber-500/50 rounded-full mb-10"></div>
+            <h2 className="text-5xl font-[1000] text-white tracking-tighter leading-[0.85] uppercase italic">
+              Empowering <br/>The Modern <br/><span className="text-amber-500">Hotelier.</span>
+            </h2>
+            <p className="text-slate-400 text-lg font-medium leading-relaxed opacity-60">
+              Integrated property management architecture, designed for reliability and world-class guest intelligence.
+            </p>
+            <div className="pt-8 flex items-center gap-10 opacity-50">
                <div className="space-y-1">
-                 <p className="text-2xl font-black text-white">4.9k</p>
-                 <p className="text-[8px] text-amber-500 font-black uppercase tracking-widest">Global Nodes</p>
+                 <p className="text-xl font-black text-white">Cloud</p>
+                 <p className="text-[8px] text-amber-500 font-black uppercase tracking-[0.2em]">Deployment</p>
                </div>
-               <div className="w-px h-10 bg-white/10"></div>
+               <div className="w-px h-8 bg-white/10"></div>
                <div className="space-y-1">
-                 <p className="text-2xl font-black text-white">2ms</p>
-                 <p className="text-[8px] text-amber-500 font-black uppercase tracking-widest">Sync Latency</p>
+                 <p className="text-xl font-black text-white">Global</p>
+                 <p className="text-[8px] text-amber-500 font-black uppercase tracking-[0.2em]">Architecture</p>
                </div>
             </div>
           </div>

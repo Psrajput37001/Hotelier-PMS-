@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --transition-speed: 0.8s;
+            --transition-speed: 0.5s;
         }
         
         body {
@@ -19,20 +19,14 @@
             margin: 0;
             -webkit-tap-highlight-color: transparent;
             overflow: hidden;
-            transition: background-color var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1), 
-                        color var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+            transition: background-color var(--transition-speed) ease;
         }
 
         .dark body { background-color: #020617; color: #f8fafc; }
         .light body { background-color: #f8fafc; color: #0f172a; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -42,26 +36,22 @@
             75% { transform: translateX(4px); }
         }
 
-        .animate-fadeIn { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-slideDown { animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fadeIn { 
+          animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+          will-change: transform, opacity;
+        }
         .animate-shake { animation: shake 0.4s ease-in-out; }
 
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
+        /* Optimize for mobile GPU */
         * {
-            transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Mobile specific bottom padding for dock */
-        @media (max-width: 1023px) {
-            .content-container {
-                padding-bottom: 140px;
-            }
+        @media (max-width: 768px) {
+          .backdrop-blur-md {
+            backdrop-filter: blur(6px);
+          }
         }
     </style>
     <script>
@@ -71,16 +61,9 @@
                 extend: {
                     colors: {
                         amber: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            300: '#fcd34d',
-                            400: '#fbbf24',
                             500: '#f59e0b',
+                            400: '#fbbf24',
                             600: '#d97706',
-                            700: '#b45309',
-                            800: '#92400e',
-                            900: '#78350f',
                         },
                         obsidian: '#020617',
                     }
