@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PropertySetupData } from '../types';
+import { PropertySetupData, Room } from '../types';
 import Logo from './Logo';
 
 interface PropertySetupProps {
@@ -38,10 +38,19 @@ const PropertySetup: React.FC<PropertySetupProps> = ({ onComplete, theme = 'dark
   const nextStep = () => {
     if (step === 2 && setupData.totalRooms > 0) {
       // Pre-populate inventory grid
-      const inv = Array.from({ length: setupData.totalRooms }).map((_, i) => ({
-        number: `${Math.floor(i / (setupData.totalRooms / setupData.floors) + 1)}${(i % (setupData.totalRooms / setupData.floors) + 1).toString().padStart(2, '0')}`,
-        category: setupData.roomCategories[0]
-      }));
+      // Fixed: Added missing id, status, and floor properties to satisfy Room type
+      const roomsPerFloor = Math.ceil(setupData.totalRooms / setupData.floors);
+      const inv: Room[] = Array.from({ length: setupData.totalRooms }).map((_, i) => {
+        const floor = Math.floor(i / roomsPerFloor) + 1;
+        const roomInFloor = (i % roomsPerFloor) + 1;
+        return {
+          id: `room-${i}-${Date.now()}`,
+          number: `${floor}${roomInFloor.toString().padStart(2, '0')}`,
+          category: setupData.roomCategories[0],
+          status: 'Available',
+          floor: floor
+        };
+      });
       setSetupData({ ...setupData, roomInventory: inv });
     }
     setStep(step + 1);

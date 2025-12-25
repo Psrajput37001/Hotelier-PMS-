@@ -11,11 +11,12 @@ const Bookings: React.FC<BookingsProps> = ({ theme = 'dark' }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const isDark = theme === 'dark';
   
+  // Fixed: Added missing roomNumber and totalAmount, and corrected invalid status
   const bookings: Booking[] = [
-    { id: '01', guestName: 'John Doe', email: 'john@hotelier.cloud', roomType: 'Superior', checkIn: '2023-12-01', checkOut: '2023-12-05', status: 'Confirmed' },
-    { id: '02', guestName: 'Jane Smith', email: 'jane@residency.io', roomType: 'Delux', checkIn: '2023-12-02', checkOut: '2023-12-04', status: 'Pending' },
-    { id: '03', guestName: 'Alice Johnson', email: 'alice@traveler.com', roomType: 'Single', checkIn: '2023-12-05', checkOut: '2023-12-10', status: 'Confirmed' },
-    { id: '04', guestName: 'Mark Wilson', email: 'mark.w@corp.net', roomType: 'Guest', checkIn: '2023-12-06', checkOut: '2023-12-07', status: 'Confirmed' },
+    { id: '01', guestName: 'John Doe', email: 'john@hotelier.cloud', roomNumber: '101', roomType: 'Superior', checkIn: '2023-12-01', checkOut: '2023-12-05', status: 'Confirmed', totalAmount: 450 },
+    { id: '02', guestName: 'Jane Smith', email: 'jane@residency.io', roomNumber: '204', roomType: 'Deluxe', checkIn: '2023-12-02', checkOut: '2023-12-04', status: 'Confirmed', totalAmount: 320 },
+    { id: '03', guestName: 'Alice Johnson', email: 'alice@traveler.com', roomNumber: '305', roomType: 'Single', checkIn: '2023-12-05', checkOut: '2023-12-10', status: 'Confirmed', totalAmount: 700 },
+    { id: '04', guestName: 'Mark Wilson', email: 'mark.w@corp.net', roomNumber: '110', roomType: 'Guest', checkIn: '2023-12-06', checkOut: '2023-12-07', status: 'Confirmed', totalAmount: 150 },
   ];
 
   const filteredBookings = bookings.filter(b => 
@@ -68,7 +69,7 @@ const Bookings: React.FC<BookingsProps> = ({ theme = 'dark' }) => {
                     <div className="text-[10px] text-slate-500 font-bold tracking-tight">{b.email}</div>
                   </td>
                   <td className="p-6">
-                    <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase ${isDark ? 'bg-white/5' : 'bg-slate-100'}`}>{b.roomType}</span>
+                    <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase ${isDark ? 'bg-white/5' : 'bg-slate-100'}`}>{b.roomType} (Room {b.roomNumber})</span>
                   </td>
                   <td className="p-6 text-xs font-bold">{b.checkIn}</td>
                   <td className="p-6 text-xs font-bold">{b.checkOut}</td>

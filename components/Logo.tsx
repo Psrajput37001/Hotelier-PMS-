@@ -12,46 +12,43 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', shrunk = false
     sm: 0.5,
     md: 0.7,
     lg: 1.0,
-    xl: 2.0,
+    xl: 1.8,
   };
 
   const currentScale = shrunk ? 0.45 : baseScale[size];
 
   return (
     <div 
-      className={`flex items-center gap-4 select-none transition-all duration-500 ease-out will-change-transform ${className}`} 
+      className={`flex items-center gap-2 select-none transition-all duration-500 ease-out will-change-transform ${className}`} 
       style={{ transform: `scale(${currentScale})`, transformOrigin: 'left center' }}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5">
         {/* HOTELIER Box */}
         <div className="relative">
-          <div className="absolute inset-0 bg-amber-500/10 blur-xl animate-pulse -z-10"></div>
-          <div className="border border-amber-500/40 px-4 py-2 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.2)] dark:bg-white/5 bg-white backdrop-blur-sm">
-             <h1 className="text-2xl font-[1000] tracking-[0.1em] text-slate-900 dark:text-white leading-none">
-               HOTELIER
+          <div className="absolute inset-0 bg-amber-500/20 blur-lg animate-pulse -z-10"></div>
+          <div className="border-[1.5px] border-amber-500/60 px-4 py-2.5 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.25)] bg-white dark:bg-slate-900/40 backdrop-blur-md rounded-sm">
+             <h1 className="text-2xl font-[1000] tracking-[0.15em] text-slate-900 dark:text-white leading-none uppercase">
+               Hotelier
              </h1>
-             {/* Subtle internal glow on border */}
-             <div className="absolute inset-0 border border-amber-500/20 pointer-events-none"></div>
           </div>
         </div>
 
         {/* HIGH INTENSITY GLOWING CORE */}
-        <div className="relative flex items-center justify-center w-8">
+        <div className="relative flex items-center justify-center w-6">
            <style>
             {`
-              @keyframes highGlow {
-                0%, 100% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 2px #fbbf24); }
-                50% { transform: scale(1.3); opacity: 1; filter: drop-shadow(0 0 12px #fbbf24); }
+              @keyframes coreGlow {
+                0%, 100% { transform: scale(1) rotate(45deg); opacity: 0.7; filter: drop-shadow(0 0 2px #fbbf24); }
+                50% { transform: scale(1.4) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 15px #fbbf24); }
               }
             `}
           </style>
-          <div className="w-2 h-2 bg-amber-400 rotate-45 shadow-[0_0_20px_#fbbf24] animate-[highGlow_2s_infinite]"></div>
-          <div className="absolute w-6 h-6 border border-amber-500/10 rounded-full animate-ping"></div>
+          <div className="w-1.5 h-1.5 bg-amber-400 rotate-45 shadow-[0_0_15px_#fbbf24] animate-[coreGlow_1.5s_infinite]"></div>
         </div>
 
         {/* PMS Box */}
         <div className="relative">
-          <div className="border border-amber-500/40 px-3 py-2 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.2)] dark:bg-white/5 bg-white backdrop-blur-sm">
+          <div className="border-[1.5px] border-slate-900/20 dark:border-white/20 px-3 py-2.5 flex items-center justify-center shadow-sm bg-white dark:bg-slate-900/40 backdrop-blur-md rounded-sm">
              <h1 className="text-2xl font-[1000] tracking-widest text-amber-500 leading-none">
                PMS
              </h1>
@@ -59,10 +56,10 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', shrunk = false
         </div>
       </div>
       
-      {!shrunk && (
-        <div className={`flex flex-col ml-4 transition-all duration-500`}>
-          <div className="h-px w-8 bg-amber-500/30 mb-2"></div>
-          <span className="text-[7px] font-black uppercase tracking-[0.7em] text-slate-400 dark:text-slate-500 whitespace-nowrap">
+      {!shrunk && size !== 'sm' && (
+        <div className={`flex flex-col ml-3 transition-all duration-500 opacity-40`}>
+          <div className="h-px w-6 bg-slate-400 dark:bg-white/20 mb-1.5"></div>
+          <span className="text-[6px] font-black uppercase tracking-[0.6em] text-slate-500 dark:text-slate-400 whitespace-nowrap">
             Powered by Adveda Solutions
           </span>
         </div>

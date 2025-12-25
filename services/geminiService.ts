@@ -1,97 +1,87 @@
 
-import { GoogleGenAI, Type, Modality, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
-// Always initialize with API key from environment
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-export const geminiModels = {
-  chat: 'gemini-3-flash-preview',
-  vision: 'gemini-3-flash-preview',
-  image: 'gemini-2.5-flash-image',
-  audio: 'gemini-2.5-flash-native-audio-preview-09-2025'
-};
-
+/**
+ * Chat with Gemini using Search and Maps grounding.
+ */
 export const chatWithGrounding = async (prompt: string, location?: { latitude: number; longitude: number }) => {
-  const ai = getAI();
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const tools: any[] = [{ googleSearch: {} }];
-  
+  let toolConfig: any = undefined;
+
   if (location) {
     tools.push({ googleMaps: {} });
+    toolConfig = {
+      retrievalConfig: {
+        latLng: location
+      }
+    };
   }
 
+  // Maps grounding is only supported in Gemini 2.5 series models.
+  const model = location ? 'gemini-2.5-flash-preview' : 'gemini-3-flash-preview';
+
   const response = await ai.models.generateContent({
-    // Maps grounding requires gemini-2.5 series models
-    model: location ? 'gemini-2.5-flash' : geminiModels.chat,
+    model,
     contents: prompt,
     config: {
       tools,
-      toolConfig: location ? {
-        retrievalConfig: {
-          latLng: location
-        }
-      } : undefined
+      toolConfig
     }
   });
 
   return response;
 };
 
-export const analyzeImage = async (prompt: string, base64Image: string, mimeType: string) => {
-  const ai = getAI();
+/**
+ * Generate images using gemini-2.5-flash-image.
+ */
+export const generateImage = async (prompt: string, aspectRatio: "1:1" | "4:3" | "16:9") => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
-    model: geminiModels.vision,
-    contents: {
-      parts: [
-        { inlineData: { data: base64Image, mimeType } },
-        { text: prompt }
-      ]
-    }
-  });
-  // response.text is a property, not a method
-  return response.text;
-};
-
-export const generateImage = async (prompt: string, aspectRatio: "1:1" | "4:3" | "16:9" = "1:1") => {
-  const ai = getAI();
-  const response = await ai.models.generateContent({
-    model: geminiModels.image,
-    contents: {
-      parts: [{ text: prompt }]
-    },
+    model: 'gemini-2.5-flash-image',
+    contents: { parts: [{ text: prompt }] },
     config: {
-      imageConfig: {
-        aspectRatio,
-      }
-    }
+      imageConfig: { aspectRatio }
+    },
   });
 
   for (const part of response.candidates?.[0]?.content?.parts || []) {
     if (part.inlineData) {
-      return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+      return `data:image/png;base64,${part.inlineData.data}`;
     }
   }
   return null;
 };
 
-// Implement manual base64 decoding for PCM audio chunks
+/**
+ * Decode base64 string to Uint8Array.
+ */
 export const decodeBase64 = (base64: string) => {
   const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes;
 };
 
-// Implement manual base64 encoding for PCM audio chunks
+/**
+ * Encode Uint8Array to base64 string.
+ */
 export const encodeBase64 = (bytes: Uint8Array) => {
   let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
   return btoa(binary);
 };
 
+/**
+ * Decode raw PCM audio bytes into an AudioBuffer.
+ */
 export async function decodeAudioData(
   data: Uint8Array,
   ctx: AudioContext,
