@@ -38,21 +38,21 @@ const Login: React.FC<LoginProps> = ({ onLogin, theme = 'dark', toggleTheme }) =
   return (
     <div className={`min-h-screen flex flex-col lg:flex-row font-sans overflow-hidden transition-colors duration-700 ${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'}`}>
       
-      {/* Mobile-First Floating Theme Toggle */}
-      <div className="fixed top-5 right-5 z-[100] lg:top-8 lg:right-8">
+      {/* Dynamic Theme Toggle - Bottom on Mobile, Top on Desktop */}
+      <div className="fixed bottom-10 right-6 lg:bottom-auto lg:top-8 lg:right-8 z-[100]">
         <button 
           onClick={toggleTheme}
-          className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 shadow-2xl border ${
+          className={`flex items-center justify-center w-14 h-14 lg:w-12 lg:h-12 rounded-full transition-all duration-300 shadow-2xl border backdrop-blur-md active:scale-90 ${
             isDark 
-            ? 'bg-slate-900 border-white/10 text-amber-500' 
-            : 'bg-white border-slate-200 text-amber-600'
+            ? 'bg-slate-900/80 border-white/10 text-amber-500 hover:bg-slate-800' 
+            : 'bg-white/80 border-slate-200 text-amber-600 hover:bg-slate-50'
           }`}
           aria-label="Toggle Night Mode"
         >
           {isDark ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="18.36" x2="5.64" y2="16.92"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lg:w-5 lg:h-5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="18.36" x2="5.64" y2="16.92"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lg:w-5 lg:h-5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           )}
         </button>
       </div>
