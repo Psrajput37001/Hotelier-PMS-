@@ -9,9 +9,20 @@ export interface ModuleConfig {
   concierge: boolean;
 }
 
+export interface PropertySetupData {
+  logo?: string;
+  address: string;
+  taxId: string; // GST or Udyam
+  floors: number;
+  totalRooms: number;
+  currency: string;
+  roomCategories: string[];
+  roomInventory: { number: string; category: string }[];
+}
+
 export interface HotelTenant {
   id: string;
-  clientId: string; // 3 Alphabets + 3 Numbers
+  clientId: string; 
   name: string;
   ownerName: string;
   location: string;
@@ -19,6 +30,8 @@ export interface HotelTenant {
   onboardedAt: string;
   status: 'Active' | 'Suspended';
   modules: ModuleConfig;
+  isSetupComplete: boolean;
+  setupData?: PropertySetupData;
 }
 
 export interface UserSession {
@@ -27,14 +40,14 @@ export interface UserSession {
   hotelId?: string;
   clientId: string;
   tenantName?: string;
+  isSetupComplete?: boolean; // Track if the owner has finished property setup
 }
 
-// Fixed: Added 'chat', 'image-gen', and 'live' to AppTab type to allow navigation to AI features
 export type AppTab = 'dashboard' | 'rooms' | 'bookings' | 'staff' | 'tenants' | 'settings' | 'chat' | 'image-gen' | 'live';
 
 export interface Room {
   id: string;
-  type: 'Superior' | 'Delux' | 'Guest' | 'Single';
+  type: string;
   number: string;
   status: 'Available' | 'Booked';
 }
@@ -63,7 +76,6 @@ export interface ImageResult {
   timestamp: number;
 }
 
-// Fixed: Added ProjectFile interface to support file uploads in WelcomeScreen
 export interface ProjectFile {
   name: string;
   path: string;

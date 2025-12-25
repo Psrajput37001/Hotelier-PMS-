@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppTab, UserSession } from './types';
+import { AppTab, UserSession, PropertySetupData } from './types';
 import { Icons } from './constants';
 import Dashboard from './components/Dashboard';
 import Rooms from './components/Rooms';
@@ -11,6 +11,7 @@ import Logo from './components/Logo';
 import ChatInterface from './components/ChatInterface';
 import ImageGen from './components/ImageGen';
 import LiveSession from './components/LiveSession';
+import PropertySetup from './components/PropertySetup';
 
 const App: React.FC = () => {
   const [session, setSession] = useState<UserSession | null>(null);
@@ -29,8 +30,20 @@ const App: React.FC = () => {
     }
   }, [theme]);
 
+  const handleOnboardingComplete = (data: PropertySetupData) => {
+    console.log("Onboarding Complete for client:", session?.clientId, data);
+    if (session) {
+      setSession({ ...session, isSetupComplete: true });
+    }
+  };
+
   if (!session) {
     return <Login onLogin={setSession} theme={theme} toggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')} />;
+  }
+
+  // If Hotel Owner but setup is not complete, force onboarding
+  if (session.role === 'HOTEL_ADMIN' && !session.isSetupComplete) {
+    return <PropertySetup onComplete={handleOnboardingComplete} theme={theme} />;
   }
 
   const isSuper = session.role === 'SUPERADMIN';
@@ -175,7 +188,7 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile App Dock - Improved Responsiveness */}
+        {/* Mobile App Dock */}
         <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[440px] z-50">
           <div className={`p-2.5 rounded-[2.5rem] flex items-center justify-around shadow-2xl transition-all duration-500 backdrop-blur-2xl border
             ${theme === 'dark' ? 'bg-slate-900/80 border-white/10' : 'bg-white/80 border-slate-200'}`}>

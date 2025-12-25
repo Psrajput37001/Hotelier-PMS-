@@ -19,7 +19,8 @@ const SuperadminPanel: React.FC<SuperadminPanelProps> = ({ theme = 'dark' }) => 
       location: 'New York', 
       onboardedAt: '2023-12-01', 
       status: 'Active',
-      modules: { inventory: true, reservations: true, personnel: true, accounting: false, concierge: true }
+      modules: { inventory: true, reservations: true, personnel: true, accounting: false, concierge: true },
+      isSetupComplete: true
     },
     { 
       id: '2', 
@@ -30,7 +31,8 @@ const SuperadminPanel: React.FC<SuperadminPanelProps> = ({ theme = 'dark' }) => 
       location: 'London', 
       onboardedAt: '2024-01-15', 
       status: 'Active',
-      modules: { inventory: true, reservations: true, personnel: false, accounting: true, concierge: false }
+      modules: { inventory: true, reservations: true, personnel: false, accounting: true, concierge: false },
+      isSetupComplete: true
     }
   ]);
 
@@ -67,7 +69,8 @@ const SuperadminPanel: React.FC<SuperadminPanelProps> = ({ theme = 'dark' }) => 
       location: newHotel.location,
       onboardedAt: new Date().toISOString().split('T')[0],
       status: 'Active',
-      modules: { ...modules }
+      modules: { ...modules },
+      isSetupComplete: false // Force architect mode on first login
     };
 
     setTenants([tenant, ...tenants]);
