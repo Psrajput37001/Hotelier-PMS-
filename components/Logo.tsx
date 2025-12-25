@@ -19,7 +19,7 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', shrunk = false
 
   return (
     <div 
-      className={`flex items-center gap-2 select-none transition-all duration-500 ease-out will-change-transform ${className}`} 
+      className={`flex flex-col items-start select-none transition-all duration-500 ease-out will-change-transform ${className}`} 
       style={{ transform: `scale(${currentScale})`, transformOrigin: 'left center' }}
     >
       <div className="flex items-center gap-1.5">
@@ -57,9 +57,8 @@ const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', shrunk = false
       </div>
       
       {!shrunk && size !== 'sm' && (
-        <div className={`flex flex-col ml-3 transition-all duration-500 opacity-40`}>
-          <div className="h-px w-6 bg-slate-400 dark:bg-white/20 mb-1.5"></div>
-          <span className="text-[6px] font-black uppercase tracking-[0.6em] text-slate-500 dark:text-slate-400 whitespace-nowrap">
+        <div className="mt-3 opacity-40 pl-1 transition-all duration-500">
+          <span className="text-[7px] font-black uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400 whitespace-nowrap">
             Powered by Adveda Solutions
           </span>
         </div>

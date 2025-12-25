@@ -71,9 +71,6 @@ const App: React.FC = () => {
         newSession.isSetupComplete = tenant.isSetupComplete;
         newSession.setupData = tenant.setupData;
       } else {
-        // Option to handle invalid credentials if they aren't in tenants list
-        // But for this mockup, we'll allow entry to start setup if not found, 
-        // Or we could block. Let's block if the clientId isn't even recognized.
         const knownClient = tenants.some(t => t.clientId.toUpperCase() === newSession.clientId.toUpperCase());
         if (!knownClient) {
             alert("Terminal Access Denied: Unrecognized Tenant Scope.");
@@ -236,7 +233,7 @@ const App: React.FC = () => {
               <>
                 {activeTab === 'dashboard' && <Dashboard role="HOTEL_ADMIN" theme={theme} setupData={session.setupData} />}
                 {activeTab === 'rooms' && <Rooms theme={theme} setupData={session.setupData} />}
-                {activeTab === 'bookings' && <Bookings theme={theme} />}
+                {activeTab === 'bookings' && <Bookings theme={theme} session={session} />}
                 {['staff', 'accounting'].includes(activeTab) && (
                   <div className="flex items-center justify-center min-h-[400px] p-10">
                      <div className="text-center space-y-4">
